@@ -1,6 +1,3 @@
-//user name: sayan pass: 123456
-//You have to insert mysql connecter .jer file (JDBC Driver)
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -103,7 +100,13 @@ class BankAccount
         System.out.println("\nWelcome To Our Branch :)\n");
 
         System.out.println("Please Enter Your Name: ");
+        System.out.println("Press 1 to creating account: ");
         customerName = sc.nextLine();
+        if(customerName.equals("1"))
+        {
+            con.register();
+            showMenu();
+        }
 
         System.out.println("\nPlease Enter Your Password: ");
         customerID = sc.nextLine();
@@ -208,7 +211,7 @@ class Con
 {
     private String pass="";
     private String uname="root";
-    private String que="INSERT INTO `bank` (`id`, `name`, `password`, `amount`) VALUES (NULL, 'sayan', '123456', '10000');";
+    //private String que="INSERT INTO `bank` (`id`, `name`, `password`, `amount`) VALUES (NULL, 'sayan', '123456', '10000');";
     private String url="jdbc:mysql://localhost:3308/test";
     public Connection connection;
 
@@ -308,5 +311,39 @@ class Con
             System.out.println(e);
         }
         return bal;
+    }
+
+    public void register()
+    {
+        try {
+            Connection con=con();
+            String sql="INSERT INTO `bank` (`id`, `name`, `password`, `amount`) VALUES (NULL, ?, ?, '');";
+            String name,pass;
+            Scanner sc=new Scanner(System.in);
+            System.out.println("Enter your name");
+            name=sc.next();
+            System.out.println("Enter your password");
+            pass=sc.next();
+            if(name!=null && pass!= null)
+            {
+                PreparedStatement ps=con.prepareStatement(sql);
+                ps.setString(1,name);
+                ps.setString(2,pass);
+
+                int rs=ps.executeUpdate();
+                if(rs==1)
+                {
+                    System.out.println("Registion successful");
+                }
+                else
+                    System.out.println("Registion fail");
+
+            }
+
+        }catch (Exception e)
+        {
+            System.out.println("User name should be unique. Try again!!!");
+            register();
+        }
     }
 }
